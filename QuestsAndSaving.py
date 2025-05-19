@@ -18,11 +18,12 @@ class Quest:
             self.status = currentStatus
 
 class Player:
-    def __init__(self, name, health, attack, position):
+    def __init__(self, name, health, attack, position, gold):
         self.name = name
         self.health = health
         self.attack = attack
         self.position = position 
+        self.gold = gold
         self.quests = [
             Quest('Main Quest', 5, 'Basic starter quest'),
             Quest('I need the frog toes', 10, "Babies first fetch quest"),
@@ -73,7 +74,7 @@ class Player:
     def saveInfo(self):
         with open('playerSave.txt', 'w') as f:
             questsData = ','.join([f"{q.status}" for q in self.quests])
-            f.write(f"{self.name},{self.health},{self.attack},{self.position[0]},{self.position[1]},{questsData}\n")
+            f.write(f"{self.name},{self.health},{self.attack},{self.position[0]},{self.position[1]},{self.gold},{questsData}\n")
         print("Player information saved to 'playerSave.txt' file.")
 
 class Game:
@@ -192,9 +193,10 @@ def loadInfo():
             health = int(data[1])
             attack = int(data[2])
             position = [int(data[3]), int(data[4])]
-            player = Player(name, health, attack, position)
+            gold = int(data[5])
+            player = Player(name, health, attack, position, gold)
             for i in range(10):
-                player.setLoadFileQuests(i, data[i+5])
+                player.setLoadFileQuests(i, data[i+6])
             return player
     else:
         print("No saved game found. Starting a new game.")
