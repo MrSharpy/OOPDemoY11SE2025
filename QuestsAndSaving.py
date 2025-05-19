@@ -36,6 +36,7 @@ class Player:
             Quest('Quest demo 9', 10, "Babies seventh fetch quest"),
             Quest('Quest demo 10', 10, "Babies eighth fetch quest")
         ]
+        self.inventory = []
 
     def move(self, direction, gameMap):
         if direction == 'up' and self.position[0] > 0:
@@ -74,7 +75,8 @@ class Player:
     def saveInfo(self):
         with open('playerSave.txt', 'w') as f:
             questsData = ','.join([f"{q.status}" for q in self.quests])
-            f.write(f"{self.name},{self.health},{self.attack},{self.position[0]},{self.position[1]},{self.gold},{questsData}\n")
+            inventoryData = ','.join(self.inventory)
+            f.write(f"{self.name},{self.health},{self.attack},{self.position[0]},{self.position[1]},{self.gold},{questsData}, {inventoryData}\n")
         print("Player information saved to 'playerSave.txt' file.")
 
 class Game:
@@ -197,6 +199,8 @@ def loadInfo():
             player = Player(name, health, attack, position, gold)
             for i in range(10):
                 player.setLoadFileQuests(i, data[i+6])
+            for i in range(16, len(data)):
+                player.inventory.append(data[i])
             return player
     else:
         print("No saved game found. Starting a new game.")
